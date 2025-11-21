@@ -38,7 +38,6 @@ public class User {
 	private LocalDate dateOfBirth;
 	
 	private LocalDate dateOfJoining;
-	
 
     private String workLocation;
 	
