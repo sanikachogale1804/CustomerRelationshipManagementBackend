@@ -33,7 +33,7 @@ public class SecurityConfig {
         return http
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(auth -> auth
-                		.requestMatchers("register","login")
+                		.requestMatchers("/register", "/login")
                 		.permitAll()
                 		.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+    
+    
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

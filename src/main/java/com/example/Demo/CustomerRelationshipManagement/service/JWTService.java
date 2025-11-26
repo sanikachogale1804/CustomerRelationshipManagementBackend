@@ -18,7 +18,7 @@ import io.jsonwebtoken.security.Keys;
 public class JWTService {
 
     // Ideally store in application.properties
-    private final String secretKey = "ReplaceThisWithAStrongBase64SecretKeyOfAtLeast256bits!!!";
+    private final String secretKey = "yourSuperSecretKeyThatIsAtLeast32BytesLong!";
 
     // Generate token with username as subject
     public String generateToken(String username) {
@@ -27,7 +27,7 @@ public class JWTService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) 
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

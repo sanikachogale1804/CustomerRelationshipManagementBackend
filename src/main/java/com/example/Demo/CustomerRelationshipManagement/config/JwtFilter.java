@@ -48,6 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 // token invalid → skip authentication
                 filterChain.doFilter(request, response);
                 return;
+                
             }
         }
 
