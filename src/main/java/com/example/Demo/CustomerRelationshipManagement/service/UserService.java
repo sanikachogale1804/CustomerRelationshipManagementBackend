@@ -39,4 +39,17 @@ public class UserService {
 			return jwtService.generateToken(user.getUsername());
 		return "fail";
 	}
+	
+	public User updateUser(Long id, User user) {
+	    User existing = repo.findById(id)
+	            .orElseThrow(() -> new RuntimeException("User not found: " + id));
+	    
+	    existing.setFullName(user.getFullName());
+	    existing.setUsername(user.getUsername());
+	    existing.setMobileNo(user.getMobileNo());
+	    existing.setDesignation(user.getDesignation());
+	    // Add other fields if needed
+	    
+	    return repo.save(existing);
+	}
 }
