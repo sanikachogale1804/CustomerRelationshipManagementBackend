@@ -1,9 +1,6 @@
 package com.example.Demo.CustomerRelationshipManagement.config;
 
 import java.io.IOException;
-import java.security.Security;
-
-import org.springframework.context.ApplicationContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,28 +28,28 @@ public class JwtFilter extends OncePerRequestFilter {
     private MyUserDetailsService myUserDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        // Skip JWT filter for public endpoints
+        if (path.equals("/register") || path.equals("/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
 
-        // ONLY process when Authorization starts with "Bearer "
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-
-            try {
-                username = jwtService.extractUserName(token);
-            } catch (Exception e) {
-                // token invalid → skip authentication
-                filterChain.doFilter(request, response);
-                return;
-                
-            }
+            username = jwtService.extractUserName(token); // FIXED
         }
 
-        // If username is found and no authentication yet
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = myUserDetailsService.loadUserByUsername(username);
@@ -60,10 +57,8 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                                userDetails, null, userDetails.getAuthorities());
+
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);

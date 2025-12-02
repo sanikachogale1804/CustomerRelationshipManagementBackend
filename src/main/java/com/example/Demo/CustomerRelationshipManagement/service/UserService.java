@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.Demo.CustomerRelationshipManagement.Entity.User;
@@ -21,6 +22,9 @@ public class UserService {
 	
 	@Autowired
 	private AuthenticationManager authManager;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 	
@@ -52,4 +56,37 @@ public class UserService {
 	    
 	    return repo.save(existing);
 	}
+	
+	// Change password for logged-in user
+	public boolean changePassword(String username, String oldPassword, String newPassword) {
+	    User user = repo.findByUsername(username)
+	            .orElseThrow(() -> new RuntimeException("User not found"));
+
+	    // Check old password
+	    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+	        return false; // old password incorrect
+	    }
+
+	    // Encode and update new password
+	    user.setPassword(passwordEncoder.encode(newPassword));
+	    repo.save(user);
+	    return true;
+	}
+
+	
+	public void adminResetPassword(Long userId, String newPassword) {
+	    User user = repo.findById(userId)
+	            .orElseThrow(() -> new RuntimeException("User not found"));
+
+	    // Encode and update password
+	    user.setPassword(passwordEncoder.encode(newPassword));
+	    repo.save(user);
+	}
+	
+	public User getUserById(Long id) {
+		return repo.findById(id)
+				.orElseThrow(() -> new RuntimeException("User Not found with ID: "+ id));
+	}
+
+	
 }

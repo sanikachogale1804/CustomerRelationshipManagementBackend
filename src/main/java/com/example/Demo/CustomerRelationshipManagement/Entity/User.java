@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,6 +45,18 @@ public class User {
 	private LocalDateTime createdAt;
 	
 	private LocalDateTime updatedAt;
+	
+	@Lob
+	private String aadharCardPath;
+	
+	@Lob
+	private String panCardPath;
+	
+	@Lob
+	private String photoPath;
+	
+	@Lob
+	private String certificatePath;
 	
 	@ManyToOne
 	@JoinColumn(name = "reporting_to_id")
