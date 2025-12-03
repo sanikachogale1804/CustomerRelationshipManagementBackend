@@ -113,17 +113,18 @@ public class UserController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
-    @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        try {
-            User updated = service.updateUser(id, user);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).build(); // user not found
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build(); // server error
-        }
-    }
+	@PutMapping("/users/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+	    try {
+	        User updated = service.updateUser(id, user);
+	        return ResponseEntity.ok(updated);
+	    } catch (RuntimeException e) {
+	        return ResponseEntity.status(404).build(); // user not found
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).build(); // server error
+	    }
+	}
+
 	
 	@PutMapping("/users/change-password")
 	@CrossOrigin(origins = "http://localhost:3000")
