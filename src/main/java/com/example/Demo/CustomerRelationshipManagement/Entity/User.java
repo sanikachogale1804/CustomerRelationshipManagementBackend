@@ -2,6 +2,7 @@ package com.example.Demo.CustomerRelationshipManagement.Entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,6 +63,10 @@ public class User {
 	@ManyToOne
 	@JoinColumn(name = "reporting_to_id")
 	private User reportingTo;
+	
+	@OneToMany(mappedBy = "assignedTo")
+	private List<Lead> leads;
+
 	
 	public enum Department{
 		Operation_Project, 
