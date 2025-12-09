@@ -31,6 +31,9 @@ public class Interaction {
 
     private LocalDate date;
     private LocalTime time;
+    
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @Column(name = "tag_location")
     private String tagLocation;
@@ -51,4 +54,5 @@ public class Interaction {
     @Column(name = "appointment_type")
     private String appointmentType;
 
+   
 }
