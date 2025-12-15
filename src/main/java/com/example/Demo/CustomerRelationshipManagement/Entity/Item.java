@@ -19,7 +19,13 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  
     
-    private Long itemName;
+    private String itemName;
+    
+    private String code;
+    
+    private String category;
+    
+    private String subCategory;
 
     private String imageUrl;  
 
@@ -31,6 +37,10 @@ public class Item {
     private Integer quantity;  
     
     private String unit;  
+    
+    private String store;
+    
+    private String importance;
 
     private Double rate;  
 
@@ -42,7 +52,17 @@ public class Item {
 
     private Double sgst;  
 
-    private Double amount;  
+    private Double amount; 
+    
+    private Double stdCost;       
+    private Double purchCost;     
+    private Double stdSalePrice;  
+    private Double GST;           
+    @Column(length = 1000)
+    private String internalNotes; 
+    private Integer minStock;     
+    private String tags;         
+    
 
     private String leadTime;  
 }
