@@ -6,11 +6,14 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Demo.CustomerRelationshipManagement.Entity.User;
+import com.example.Demo.CustomerRelationshipManagement.Repository.UserRepository;
 import com.example.Demo.CustomerRelationshipManagement.service.FileService;
 import com.example.Demo.CustomerRelationshipManagement.service.UserService;
 
@@ -32,6 +36,9 @@ public class UserController {
 	
 	@Autowired
     private FileService fileService; 
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(
@@ -104,6 +111,15 @@ public class UserController {
 	    return ResponseEntity.ok(saved);
 	}
 
+
+	@GetMapping("/users/{id}")
+	public EntityModel<User> getUserById(@PathVariable Long id) {
+	    User user = userRepository.findById(id)
+	        .orElseThrow(() -> new RuntimeException("User not found"));
+	    return EntityModel.of(user,
+	        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+	            .getUserById(id)).withSelfRel());
+	}
 
 	
 	@CrossOrigin(origins =  "http://localhost:3000")

@@ -30,24 +30,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new org.springframework.web.cors.CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.addAllowedOrigin("http://localhost:3000");
-                    config.addAllowedOrigin("http://127.0.0.1:3000");
-                    config.addAllowedOrigin("http://192.168.1.91:3000");
+                    config.addAllowedOrigin("http://localhost:3000"); // React app
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
                     return config;
                 }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login","/items").permitAll()
+                        .requestMatchers(
+                            "/register",
+                            "/login",
+                            "/leads",       // allow POST & GET
+                            "/leads/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .httpBasic(httpBasic -> httpBasic.disable()) 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
